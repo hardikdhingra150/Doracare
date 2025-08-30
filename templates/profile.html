@@ -1,0 +1,42 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<div class="min-h-screen w-screen flex items-center justify-center relative px-4 py-16 bg-gradient-to-br from-emerald-400 via-emerald-500 to-emerald-700">
+  
+  <div class="max-w-screen-md w-full md:w-[50vw] bg-white bg-opacity-95 rounded-2xl p-8 shadow-xl backdrop-blur-md z-10 mt-16 border border-emerald-200">
+    
+    <!-- Profile Header -->
+    <div class="flex items-center justify-center mb-8 gap-4 flex-wrap">
+      <img src="../static/assets/user.png" alt="Profile Image" 
+           class="w-16 h-16 rounded-full shadow-lg border-4 border-white">
+      <p class="text-3xl md:text-4xl font-extrabold text-center bg-gradient-to-r from-emerald-600 to-emerald-400 bg-clip-text text-transparent">
+        {{ name }}
+      </p>
+    </div>
+
+    <!-- Profile Details -->
+    <div class="text-gray-800 flex flex-col gap-4">
+      {% for label, value, bg_color in [
+        ('Name:', name, 'bg-gradient-to-r from-emerald-50 to-emerald-100'),
+        ('Age:', age, 'bg-gradient-to-r from-emerald-100 to-emerald-200'),
+        ('Gender:', gender, 'bg-gradient-to-r from-emerald-50 to-emerald-100'),
+        ('Concerns:', concerns, 'bg-gradient-to-r from-emerald-100 to-emerald-200'),
+        ('How Often Does Your Acne Appear?', acne_frequency, 'bg-gradient-to-r from-emerald-50 to-emerald-100'),
+        ('How Many Comedones Do You Have?', comedones_count, 'bg-gradient-to-r from-emerald-100 to-emerald-200'),
+        ("First Concern You'd Like To Address:", first_concern, 'bg-gradient-to-r from-emerald-50 to-emerald-100'),
+        ('Cosmetic Usage Frequency:', cosmetics_usage, 'bg-gradient-to-r from-emerald-100 to-emerald-200'),
+        ('Reaction to Skincare Products:', skin_reaction, 'bg-gradient-to-r from-emerald-50 to-emerald-100'),
+        ('Skin Type Description:', skin_type_details, 'bg-gradient-to-r from-emerald-100 to-emerald-200'),
+        ('Medications That May Interact:', medications, 'bg-gradient-to-r from-emerald-50 to-emerald-100'),
+        ('Current Skincare Routine:', skincare_routine, 'bg-gradient-to-r from-emerald-100 to-emerald-200'),
+        ('Stress Level (0-5):', stress_level, 'bg-gradient-to-r from-emerald-50 to-emerald-100')
+      ] %}
+        <div class="px-6 py-3 flex flex-col md:flex-row justify-between items-center rounded-lg {{ bg_color }} shadow-md border border-emerald-200">
+          <label class="font-semibold text-base md:text-lg text-emerald-900">{{ label }}</label>
+          <span class="text-base md:text-lg font-medium text-emerald-800 text-right">{{ value }}</span>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+{% endblock %}

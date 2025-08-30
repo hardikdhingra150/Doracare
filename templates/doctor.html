@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SkInsight - Appointments</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="flex flex-col min-h-screen bg-gradient-to-br from-emerald-50 via-emerald-100 to-white">
+    <div class="flex-grow">
+        <!-- Navbar -->
+        <div class="h-[10vh] flex items-center justify-between bg-gradient-to-r from-emerald-400 to-emerald-600 px-12 font-serif shadow-lg">
+            <h1 class="text-xl font-bold text-white flex items-center gap-2">
+                <i class="fa-solid fa-spa text-3xl"></i> SkInsight 
+            </h1>
+            <div class="flex items-center gap-8 font-bold text-white">
+                <a href="/" class="hover:text-emerald-200"><i class="fa-solid fa-right-from-bracket text-xl"></i> Logout</a>
+            </div>
+        </div>
+
+        <!-- Background + Content -->
+        <div class="h-[100vh] w-full flex flex-col justify-center items-center gap-9 relative">
+            <img src="../static/assets/download.jpeg" alt="" class="absolute top-0 left-0 w-full h-full object-cover opacity-20 z-0">
+            
+            <div class="h-[20vh] w-full flex items-center justify-center z-20">
+                <h1 class="text-5xl font-bold font-serif text-emerald-700 flex items-center gap-4">
+                    <i class="fa-solid fa-stethoscope text-6xl text-emerald-500"></i> Patient's Appointment Requests
+                </h1>
+            </div>
+
+            <div id="appointmentsContainer" class="h-[60vh] z-20 w-4/5 bg-white bg-opacity-90 p-8 backdrop-blur-md rounded-2xl overflow-y-scroll shadow-2xl border border-emerald-200 flex flex-col">
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var Alluser = { appointments };
+        var container = document.getElementById("appointmentsContainer");
+
+        Alluser.forEach(function(appointment) {
+            var appointmentDiv = document.createElement("div");
+            appointmentDiv.classList.add(
+                "h-auto","w-full","bg-gradient-to-r","from-emerald-50","to-emerald-100",
+                "mt-3","rounded-xl","border","border-emerald-300","p-4","text-lg",
+                "font-serif","mb-3","relative","shadow-md"
+            );
+         
+            var content = "<strong class='text-emerald-700'>Name:</strong> " + appointment[1] + "<br>" +
+                          "<strong class='text-emerald-700'>Email:</strong> " + appointment[2] + "<br>" +
+                          "<strong class='text-emerald-700'>Date:</strong> " + appointment[3] + "<br>" +
+                          "<strong class='text-emerald-700'>Skin Type:</strong> " + appointment[4] + "<br>"+
+                          "<strong class='text-emerald-700'>Phone No.:</strong> " + appointment[5] + "<br>"+
+                          "<strong class='text-emerald-700'>Reason :</strong> " + appointment[7] + "<br>";
+        
+            appointmentDiv.innerHTML = content;
+        
+            var checkIcon = document.createElement("i");
+            if (appointment[8]==0){
+                checkIcon.classList.add("fas","fa-check","text-xl","text-emerald-600","cursor-pointer","absolute","top-10","right-12","hover:scale-110","transition");
+            }
+            checkIcon.onclick = function() { handleCheck(appointment); };
+        
+            var trashIcon = document.createElement("i");
+            trashIcon.classList.add("fas","fa-trash-alt","text-xl","text-red-500","cursor-pointer","absolute","top-10","right-4","hover:scale-110","transition");
+            trashIcon.onclick = function() { handleDelete(appointment); };
+        
+            appointmentDiv.appendChild(checkIcon);
+            appointmentDiv.appendChild(trashIcon);
+            container.appendChild(appointmentDiv);
+        });
+        
+        function handleCheck(appointment) {
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "/update_status", true);
+            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    window.location.reload();
+                }
+            };
+            xhr.send("appointment_id=" + appointment[0]+"&type="+ appointment[5]);
+        }
+        
+        function handleDelete(appointment) {
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "/delete_user_request", true);
+            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    window.location.reload();
+                }
+            };
+            xhr.send("id=" + appointment[0]);
+        }
+    </script>
+
+    <!-- Footer -->
+    <footer class="bg-gradient-to-r from-emerald-400 to-emerald-600 text-white py-6 mt-auto">
+        <div class="container mx-auto px-6 md:px-12 flex flex-col md:flex-row justify-between items-center">
+            <div class="text-center md:text-left mb-4 md:mb-0">
+                <h2 class="text-xl font-semibold">Doracare</h2>
+                <p class="text-emerald-100 text-sm mt-1">Your AI-powered skincare expert.</p>
+            </div>
+            <div class="flex gap-6 text-sm">
+                <a href="{{ url_for('predict') }}" class="hover:text-emerald-200">Face Analysis</a>
+                <a href="{{ url_for('bookappointment') }}" class="hover:text-emerald-200">New Appointment</a>
+                <a href="{{ url_for('profile') }}" class="hover:text-emerald-200">Profile</a>
+            </div>
+            <div class="flex gap-4 text-lg">
+                <a href="#" class="hover:text-emerald-200"><i class="fab fa-facebook"></i></a>
+                <a href="#" class="hover:text-emerald-200"><i class="fab fa-twitter"></i></a>
+                <a href="#" class="hover:text-emerald-200"><i class="fab fa-instagram"></i></a>
+                <a href="#" class="hover:text-emerald-200"><i class="fab fa-linkedin"></i></a>
+            </div>
+        </div>
+        <div class="text-center text-emerald-100 text-sm mt-4">
+            &copy; 2025 Doracare. All rights reserved.
+        </div>
+    </footer>
+</body>
+</html>

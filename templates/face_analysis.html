@@ -1,0 +1,143 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<style>
+    .predictions-container, .recommendations-container {
+        background: linear-gradient(to bottom right, #ffffff, #fef9f9);
+        padding: 20px;
+        border-radius: 18px;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+        margin-top: 20px;
+        width: 90%;
+        max-width: 700px;
+        border: 1px solid #fbcfe8;
+    }
+
+    .condition-title {
+        color: #2563eb;
+        font-weight: 700;
+        margin-bottom: 12px;
+        font-size: 22px;
+        font-family: "Playfair Display", serif;
+    }
+
+    .product-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .product-list li {
+        padding: 14px;
+        border-bottom: 1px dashed #cbd5e1;
+        margin-bottom: 10px;
+        background: #fff;
+        border-radius: 12px;
+        font-size: 15px;
+        transition: all 0.2s ease-in-out;
+    }
+
+    .product-list li:hover {
+        background: #f8fafc;
+        transform: translateY(-2px);
+    }
+
+    .product-list li:last-child {
+        border-bottom: none;
+    }
+
+    span {
+        font-size: 16px;
+        font-weight: 600;
+        color: #1d4ed8;
+        font-family: "Playfair Display", serif;
+    }
+</style>
+
+<div class="min-h-[90vh] w-screen flex items-center relative justify-center bg-gradient-to-br from-indigo-50 via-pink-50 to-white">
+    <!-- Container -->
+    <div class="my-12 w-[55vw] bg-white bg-opacity-95 rounded-2xl p-10 backdrop-blur-lg z-10 shadow-2xl border border-indigo-100">
+        <!-- Title -->
+        <h1 class="text-[42px] leading-[48px] font-bold font-serif text-indigo-700">🌿 Upload Your Image</h1>
+        <p class="text-gray-600 mt-1 text-lg">AI-powered skincare insights & gentle recommendations ✨</p>
+
+        <!-- Upload Form -->
+        <form action="/predict" method="post" enctype="multipart/form-data">
+            <div class="my-6 w-full p-12 rounded-2xl border-2 border-dashed border-indigo-400 flex flex-col gap-4 justify-center items-center bg-indigo-50 bg-opacity-40 hover:bg-indigo-100 transition cursor-pointer">
+                <input id="file" class="hidden" type="file" name="image" accept="image/*" required>
+                <p class="text-center text-lg"><span onclick="handleFileClick()" class="text-indigo-700 font-semibold underline text-xl cursor-pointer">Click Here</span> to select a file</p>
+                <p class="mt-4 text-sm hidden text-green-600 font-medium" id="file-selected">✅ File Selected!</p>
+            </div>
+            <button class="px-8 py-3 text-white text-lg font-semibold bg-gradient-to-r from-indigo-500 to-pink-500 hover:from-indigo-600 hover:to-pink-600 rounded-full shadow-md transition" type="submit">
+                Predict Results
+            </button>
+        </form>
+
+        <!-- Results -->
+        <div class="predictions-container mt-8">
+            <h2 class="condition-title">🔍 Detected Conditions</h2>
+            <ul id="prediction" class="product-list"></ul>
+        </div>
+
+        <div class="recommendations-container mt-8">
+            <h2 class="condition-title">💡 Recommended Products</h2>
+            <ul id="recommendations" class="product-list"></ul>
+        </div>
+
+        <!-- Uploaded Image -->
+        <img src="" id="image" alt="" class="hidden mt-8 h-[420px] w-full object-cover rounded-xl border border-indigo-200 shadow-lg">
+    </div>
+</div>
+
+<script>
+    var data = '{{ data | tojson | safe }}';
+    const jsonData = JSON.parse(data);
+    console.log(jsonData);
+
+    const fileInput = document.getElementById('file');
+    function handleFileClick() {
+        fileInput.click();
+    }
+    fileInput.addEventListener('change', () => {
+        document.getElementById('file-selected').classList.remove('hidden');
+    });
+
+    document.addEventListener("DOMContentLoaded", () => {
+        const predictionContainer = document.getElementById('prediction');
+        jsonData.classes.forEach(condition => {
+            const conditionItem = document.createElement('li');
+            conditionItem.textContent = condition;
+            predictionContainer.appendChild(conditionItem);
+        });
+
+        const recommendationContainer = document.getElementById('recommendations');
+        jsonData.recommendations.forEach(item => {
+            const condition = item[0];
+            const products = item[1];
+            const conditionItem = document.createElement('li');
+            conditionItem.innerHTML = `<strong class="text-indigo-600">${condition} :</strong>`;
+            products.forEach(product => {
+                const productItem = document.createElement('li');
+                const Ingredients = product.Ingredients.replace(/[^a-zA-Z0-9\s]/g, "");
+                productItem.innerHTML = `
+                    <span>Brand :</span> ${product.Brand} <br>
+                    <span>Name :</span> ${product.Name} <br>
+                    <span>Price :</span> $ ${product.Price} <br>
+                    <span>Ingredients :</span> ${Ingredients}
+                `;
+                conditionItem.appendChild(productItem);
+            });
+            recommendationContainer.appendChild(conditionItem);
+        });
+
+        if (jsonData.classes && jsonData.classes.length > 0) {
+            const img = document.getElementById('image');
+            if (img) {
+                img.src = "/static/annotations_0.jpg";
+                img.classList.remove('hidden');
+            }
+        }
+    });
+</script>
+
+{% endblock %}

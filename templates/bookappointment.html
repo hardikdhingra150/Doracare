@@ -1,0 +1,64 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+
+<div class="min-h-screen w-full relative flex flex-col items-center justify-center px-4 py-8 bg-gradient-to-br from-emerald-50 via-green-50 to-white">
+    <!-- Background Image (leafy / nature) -->
+    <img src="{{ url_for('static', filename='assets/nature_bg.webp') }}" alt="" 
+         class="absolute top-0 left-0 w-full h-full object-cover opacity-20 z-0">
+
+    <div class="max-w-screen-lg w-full bg-white bg-opacity-90 rounded-2xl shadow-2xl p-10 backdrop-blur-md flex flex-col z-20 border border-emerald-100">
+        
+        <!-- Heading -->
+        <div class="h-[10vh] w-full flex justify-center items-center">
+            <h1 class="text-4xl md:text-5xl font-serif text-emerald-600 text-center">
+                🌿 Book Your Skincare Appointment 🌿
+            </h1>
+        </div>
+
+        <!-- Appointment Form -->
+        <div class="w-full flex justify-center">
+            <form action="/appointment" method="POST" class="w-full flex flex-col gap-6">
+                
+                <!-- Row 1 -->
+                <div class="flex flex-wrap justify-center items-center gap-6 mt-6">
+                    <input type="text" name="name" placeholder="Full Name" 
+                           class="h-12 w-full md:w-96 p-4 rounded-lg border-2 border-emerald-200 focus:border-emerald-400 focus:ring-2 focus:ring-emerald-200 outline-none transition">
+                    <input type="email" name="email" placeholder="Email Address" 
+                           class="h-12 w-full md:w-96 p-4 rounded-lg border-2 border-emerald-200 focus:border-emerald-400 focus:ring-2 focus:ring-emerald-200 outline-none transition">
+                </div>
+
+                <!-- Row 2 -->
+                <div class="flex flex-wrap justify-center items-center gap-6">
+                    <input type="date" name="date" 
+                           class="h-12 w-full md:w-96 p-4 rounded-lg border-2 border-emerald-200 focus:border-emerald-400 focus:ring-2 focus:ring-emerald-200 outline-none transition">
+                    <input type="text" name="skin" placeholder="Skin Type (Dry, Oily, Sensitive...)" 
+                           class="h-12 w-full md:w-96 p-4 rounded-lg border-2 border-emerald-200 focus:border-emerald-400 focus:ring-2 focus:ring-emerald-200 outline-none transition">
+                </div>
+
+                <!-- Row 3 -->
+                <div class="flex flex-wrap justify-center items-center gap-6">
+                    <input type="text" name="phone" placeholder="Phone Number" 
+                           class="h-12 w-full md:w-96 p-4 rounded-lg border-2 border-emerald-200 focus:border-emerald-400 focus:ring-2 focus:ring-emerald-200 outline-none transition">
+                    <input type="number" name="age" placeholder="Your Age" 
+                           class="h-12 w-full md:w-96 p-4 rounded-lg border-2 border-emerald-200 focus:border-emerald-400 focus:ring-2 focus:ring-emerald-200 outline-none transition">
+                </div>
+
+                <!-- Reason -->
+                <div class="w-full">
+                    <textarea name="address" placeholder="Reason for Appointment" rows="3" 
+                              class="w-full p-4 rounded-lg border-2 border-emerald-200 focus:border-emerald-400 focus:ring-2 focus:ring-emerald-200 outline-none transition"></textarea>
+                </div>
+
+                <!-- Button -->
+                <div class="flex justify-center">
+                    <button class="h-12 w-48 text-lg rounded-full bg-gradient-to-r from-emerald-400 to-green-500 hover:from-emerald-500 hover:to-green-600 text-white font-semibold shadow-lg transition duration-300">
+                        Book Now ✨
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>    
+</div>  
+
+{% endblock %}
